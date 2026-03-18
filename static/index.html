@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halleyx Workflow System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+    <div id="app">
+        <nav class="sidebar glass">
+            <div class="logo">
+                <div class="logo-icon">HX</div>
+                <h2>Halleyx</h2>
+            </div>
+            <ul class="nav-links">
+                <li data-route="dashboard"><i class="icon">💻</i> Dashboard</li>
+                <li class="active" data-route="workflows"><i class="icon">⚡</i> Workflows</li>
+                <li data-route="executions"><i class="icon">📊</i> Audit Log</li>
+            </ul>
+        </nav>
+        <main class="content">
+            <header class="topbar glass">
+                <h1 id="page-title">Workflows</h1>
+                <div class="user-profile">Admin User</div>
+            </header>
+            <div id="view-container" class="view-container">
+                <!-- Views injected here by JS -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal glass" id="modal-content">
+            <!-- Modal content injected here -->
+        </div>
+    </div>
+
+    <!-- Templates -->
+    <template id="tpl-dashboard">
+        <div class="split-view">
+            <div class="card glass">
+                <h3>Cluster Usage</h3>
+                <div style="font-size: 32px; font-weight: bold; color: var(--primary); margin-top: 10px;">45%</div>
+                <p class="text-muted" style="margin-top: 5px;">CPU Utilization</p>
+                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 10px;">
+                    <div style="width: 45%; height: 100%; background: var(--primary); border-radius: 4px;"></div>
+                </div>
+                
+                <div style="font-size: 32px; font-weight: bold; color: var(--success); margin-top: 24px;">2.4 GB</div>
+                <p class="text-muted" style="margin-top: 5px;">Memory Usage</p>
+                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 10px;">
+                    <div style="width: 60%; height: 100%; background: var(--success); border-radius: 4px;"></div>
+                </div>
+            </div>
+            
+            <div class="card glass">
+                <h3>Worker Usage</h3>
+                <div class="steps-list" style="margin-top: 15px;">
+                    <div class="step-item">
+                        <div>
+                            <h4>Worker Node 1</h4>
+                            <span class="badge active">Online</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: bold;">12</div>
+                            <small class="text-muted">Active Tasks</small>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top:24px">Live Activity</h3>
+                <div id="live-activity" class="steps-list" style="margin-top: 15px; max-height: 180px; overflow-y: auto;">
+                    <p class="text-muted">Loading activity...</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-workflows-list">
+        <div class="actions-bar">
+            <input type="text" class="input-search" placeholder="Search workflows..." id="search-wf">
+            <button class="btn btn-primary" onclick="app.showCreateWorkflow()">+ New Workflow</button>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Version</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="workflows-tbody"></tbody>
+        </table>
+    </template>
+
+    <template id="tpl-workflow-editor">
+        <div class="editor-header">
+            <div>
+                <h2 id="editor-wf-name">Workflow Name</h2>
+                <span class="badge" id="editor-wf-version">v1</span>
+            </div>
+            <button class="btn btn-secondary" onclick="app.navigate('workflows')">Back</button>
+        </div>
+        
+        <div class="split-view">
+            <div class="card glass">
+                <h3>Details & Schema</h3>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="wf-name-input" class="input-field">
+                </div>
+                <div class="form-group">
+                    <label>Input Schema (JSON)</label>
+                    <textarea id="wf-schema-input" class="input-field editor-textarea"></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="app.saveWorkflowDetails()">Save Details</button>
+            </div>
+            
+            <div class="card glass">
+                <div class="flex-between">
+                    <h3>Steps</h3>
+                    <button class="btn btn-sm btn-primary" onclick="app.showAddStepModal()">+ Add Step</button>
+                </div>
+                <div id="steps-list" class="steps-list"></div>
+            </div>
+        </div>
+    </template>
+    
+    <template id="tpl-executions-list">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Execution ID</th>
+                    <th>Workflow</th>
+                    <th>Status</th>
+                    <th>Start Time</th>
+                    <th>Duration</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="executions-tbody"></tbody>
+        </table>
+    </template>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
